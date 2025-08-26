@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Array Playground</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1 class="my-3">Array Playground</h1>
+
+    <div class="row gx-4 gy-3 my-3 my-md-5">
+
+      <!-- Array State -->
+      <div class="col-md-6">
+        <h4>Array State</h4>
+        <div id="arrayState" class="bg-light text-black border border-dark rounded p-3"></div>
+        <button id="resetBtn" class="btn btn-danger mt-3">Reset</button>
+      </div>
+
+      <!-- Controls + Results -->
+      <div class="col-md-6">
+
+        <h4>Results</h4>
+
+        <div class="bg-light border border-dark rounded p-3 mb-3">
+          <h6 class="mb-2">🔍 Non-mutating</h6>
+          <div id="nonMutatingResults"></div>
+          <hr>
+          <h6 class="mb-2">✏️ Mutating</h6>
+          <div id="mutatingResults"></div>
+        </div>
+
+        <div class="bg-light text-black border border-dark rounded p-3">
+
+          <form id="arrayForm">
+
+            <div class="row">
+
+              <div class="col-md-6">
+                <h5>🔍 Non-mutating</h5>
+
+                <ul class="list-unstyled">
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="length"> length
+                    </label>
+                  </li>
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="toString"> toString()
+                    </label>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="at"> at()
+                    </label>
+                    <input type="number" id="atIndex" value="-1" style="width:80px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="join"> join()
+                    </label>
+                    <input type="text" id="joinSep" placeholder="separator (e.g. , )" style="width:160px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="slice"> slice()
+                    </label>
+                    start <input type="number" id="sliceStart" value="0" style="width:70px;" disabled>
+                    end <input type="number" id="sliceEnd" value="3" style="width:70px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="includes"> includes()
+                    </label>
+                    <input type="text" id="includesVal" placeholder="value" style="width:160px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="indexOf"> indexOf()
+                    </label>
+                    <input type="text" id="indexOfVal" placeholder="value" style="width:160px;" disabled>
+                  </li>
+
+                </ul>
+
+              </div>
+
+              <div class="col-md-6">
+                <h5>✏️ Mutating</h5>
+
+                <ul class="list-unstyled">
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="push"> push()
+                    </label>
+                    <input type="text" id="pushValue" placeholder="value" style="width:160px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="pop"> pop()
+                    </label>
+                  </li>
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="shift"> shift()
+                    </label>
+                  </li>
+
+                  <li class="mb-2">
+                    <label class="me-2">
+                      <input type="radio" name="array_method" value="unshift"> unshift()
+                    </label>
+                    <input type="text" id="unshiftValue" placeholder="value" style="width:160px;" disabled>
+                  </li>
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="reverse"> reverse()
+                    </label>
+                  </li>
+
+                  <li class="mb-2">
+                    <label>
+                      <input type="radio" name="array_method" value="sort"> sort()
+                    </label>
+                  </li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Run</button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const originalArray = ["zero", "one", "two", "three", "four", "five", "six", "seven"];
+    let myArray = [...originalArray];
+
+    // Elements
+    const arrayStateDiv = document.getElementById("arrayState");
+    const nonMutatingDiv = document.getElementById("nonMutatingResults");
+    const mutatingDiv = document.getElementById("mutatingResults");
+    const resetBtn = document.getElementById("resetBtn");
+    const arrayForm = document.getElementById("arrayForm");
+
+    // Inputs
+    const atIndex = document.getElementById("atIndex");
+    const joinSep = document.getElementById("joinSep");
+    const sliceStart = document.getElementById("sliceStart");
+    const sliceEnd = document.getElementById("sliceEnd");
+    const includesVal = document.getElementById("includesVal");
+    const indexOfVal = document.getElementById("indexOfVal");
+    const pushValue = document.getElementById("pushValue");
+    const unshiftValue = document.getElementById("unshiftValue");
+
+    // Render helpers
+    function showArray() {
+      arrayStateDiv.innerHTML = myArray
+        .map((v, i) => `item ${i}: ${v}`)
+        .join("<br>");
+    }
+    function setResult(target, html) {
+      target.innerHTML = html;
+    }
+
+    // Initial render
+    showArray();
+
+    // Enable/disable inputs based on method
+    function toggleInputs(method) {
+      const inputs = [atIndex, joinSep, sliceStart, sliceEnd, includesVal, indexOfVal, pushValue, unshiftValue];
+      inputs.forEach(inp => inp.disabled = true);
+      switch (method) {
+        case "at": atIndex.disabled = true; atIndex.disabled = false; break;
+        case "join": joinSep.disabled = false; break;
+        case "slice": sliceStart.disabled = sliceEnd.disabled = false; break;
+        case "includes": includesVal.disabled = false; break;
+        case "indexOf": indexOfVal.disabled = false; break;
+        case "push": pushValue.disabled = false; break;
+        case "unshift": unshiftValue.disabled = false; break;
+      }
+    }
+    arrayForm.addEventListener("change", (event) => {
+      if (event.target.name === "array_method") toggleInputs(event.target.value);
+    });
+
+    // Submit/Run
+    arrayForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const selected = arrayForm.querySelector("input[name='array_method']:checked");
+      if (!selected) return;
+
+      const m = selected.value;
+
+      switch(m) {
+
+        // Non-mutating
+        case "length":
+          setResult(nonMutatingDiv, `<p>Array length: <strong>${myArray.length}</strong></p>`);
+          return;
+
+        case "toString":
+          setResult(nonMutatingDiv, `<p>${myArray.toString()}</p>`);
+          return;
+
+        case "at":
+          const idx = Number(atIndex.value);
+          const val = myArray.at(idx);
+          setResult(nonMutatingDiv, `<p>myArray.at(${idx}) → <strong>${val === undefined ? "undefined" : val}</strong></p>`);
+          return;
+
+        case "join":
+          const sep = joinSep.value ?? "";
+          setResult(nonMutatingDiv, `<p>myArray.join(${JSON.stringify(sep)}) → <strong>${myArray.join(sep)}</strong></p>`);
+          return;
+
+        case "slice":
+          const start = sliceStart.value === "" ? undefined : Number(sliceStart.value);
+          const end = sliceEnd.value === "" ? undefined : Number(sliceEnd.value);
+          const res = (start === undefined && end === undefined)
+            ? myArray.slice()
+            : (end === undefined ? myArray.slice(start) : myArray.slice(start, end));
+          setResult(nonMutatingDiv, `<p>myArray.slice(${start ?? ""}${end !== undefined ? ", " + end : ""}) → <strong>[${res.join(", ")}]</strong></p>`);
+          return;
+
+        case "includes":
+          const incl = includesVal.value;
+          setResult(nonMutatingDiv, `<p>myArray.includes(${JSON.stringify(incl)}) → <strong>${myArray.includes(incl)}</strong></p>`);
+          return;
+
+        case "indexOf":
+          const indx = indexOfVal.value;
+          setResult(nonMutatingDiv, `<p>myArray.indexOf(${JSON.stringify(indx)}) → <strong>${myArray.indexOf(indx)}</strong></p>`);
+          return;
+
+        // Mutating
+
+        case "push":
+          const pushVal = pushValue.value || "newItem";
+          myArray.push(pushVal);
+          setResult(mutatingDiv, `<p>push(${JSON.stringify(pushVal)})</p>`);
+          break;
+
+        case "pop":
+          const popped = myArray.pop();
+          setResult(mutatingDiv, `<p>pop() → <strong>${popped}</strong></p>`);
+          break;
+
+        case "shift":
+          const shifted = myArray.shift();
+          setResult(mutatingDiv, `<p>shift() → <strong>${shifted}</strong></p>`);
+          break;
+
+        case "unshift":
+          const unshVal = unshiftValue.value || "newItem";
+          myArray.unshift(unshVal);
+          setResult(mutatingDiv, `<p>unshift(${JSON.stringify(unshVal)})</p>`);
+          break;
+
+        case "reverse":
+          myArray.reverse();
+          setResult(mutatingDiv, `<p>reverse()</p>`);
+          break;
+
+        case "sort":
+          myArray.sort(); // lexicographic sort
+          setResult(mutatingDiv, `<p>sort()</p>`);
+          break;
+
+      }
+
+      // Refresh array state after any mutating op
+      showArray();
+    });
+
+    // Reset
+    resetBtn.addEventListener("click", () => {
+      myArray = [...originalArray];
+      showArray();
+      setResult(mutatingDiv, `<p>Array reset.</p>`);
+    });
+
+  </script>
+
+</body>
+
+</html>
