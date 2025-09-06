@@ -221,6 +221,9 @@
       const selected = arrayForm.querySelector("input[name='array_method']:checked");
       if (!selected) return;
 
+      setResult(nonMutatingDiv, "<p></p>");
+      setResult(mutatingDiv, "<p></p>");
+
       const m = selected.value;
 
       switch(m) {
